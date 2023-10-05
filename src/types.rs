@@ -23,7 +23,7 @@ pub struct NewPerson {
     pub nick: Nick,
     #[serde(rename = "nascimento", with = "date_format")]
     pub birth_date: Date,
-    pub stack: Option<Vec<Tech>>
+    pub stack: Option<Vec<Tech>>,
 }
 
 macro_rules! new_string_type {
