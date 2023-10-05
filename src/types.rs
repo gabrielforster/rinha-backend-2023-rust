@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 use time::Date;
 use uuid::Uuid;
-use sqlx::FromRow;
 
-#[derive(Clone, Serialize, Deserialize, FromRow)]
+#[derive(Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "sqlx", derive(sqlx::FromRow))]
 pub struct Person {
     pub id: Uuid,
     #[serde(rename = "nome")]
@@ -12,12 +12,11 @@ pub struct Person {
     pub nick: Nick,
     #[serde(rename = "nascimento", with = "date_format")]
     pub birth_date: Date,
-    pub stack: Option<Vec<Tech>>
+    pub stack: Option<Vec<String>>,
 }
 
 #[derive(Clone, Deserialize)]
 pub struct NewPerson {
-    pub id: Uuid,
     #[serde(rename = "nome")]
     pub name: PersonName,
     #[serde(rename = "apelido")]
@@ -45,21 +44,20 @@ macro_rules! new_string_type {
             type Error = &'static str;
 
             fn try_from(value: String) -> Result<Self, Self::Error> {
-                if value.len() > $max_length {
-                    Err($error_message.into())
-                } else {
+                if value.len() <= $max_length {
                     Ok($type(value))
+                } else {
+                    Err($error_message)
                 }
             }
         }
-
 
         impl From<$type> for String {
             fn from(value: $type) -> Self {
                 value.0
             }
         }
-    }
+    };
 }
 
 new_string_type!(Nick, max_length = 32, error = "nick is too big");
