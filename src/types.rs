@@ -1,30 +1,30 @@
 use serde::{Deserialize, Serialize};
 use time::Date;
 use uuid::Uuid;
+use sqlx::FromRow;
 
-#[derive(Clone, Serialize, Deserialize)]
-#[cfg_attr(feature = "sqlx", derive(sqlx::FromRow))]
+#[derive(Clone, Serialize, Deserialize, FromRow)]
 pub struct Person {
     pub id: Uuid,
     #[serde(rename = "nome")]
-    pub name: String,
+    pub name: PersonName,
     #[serde(rename = "apelido")]
     pub nick: Nick,
     #[serde(rename = "nascimento", with = "date_format")]
     pub birth_date: Date,
-    pub stack: Option<Vec<String>>
+    pub stack: Option<Vec<Tech>>
 }
 
 #[derive(Clone, Deserialize)]
 pub struct NewPerson {
     pub id: Uuid,
     #[serde(rename = "nome")]
-    pub name: String,
+    pub name: PersonName,
     #[serde(rename = "apelido")]
     pub nick: Nick,
     #[serde(rename = "nascimento", with = "date_format")]
     pub birth_date: Date,
-    pub stack: Option<Vec<String>>
+    pub stack: Option<Vec<Tech>>
 }
 
 macro_rules! new_string_type {
