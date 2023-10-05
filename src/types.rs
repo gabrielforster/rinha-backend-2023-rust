@@ -2,14 +2,13 @@ use serde::{Deserialize, Serialize};
 use time::Date;
 use uuid::Uuid;
 
-#[derive(Clone, Serialize, Deserialize)]
-#[cfg_attr(feature = "sqlx", derive(sqlx::FromRow))]
+#[derive(Clone, Serialize, Deserialize, sqlx::FromRow)]
 pub struct Person {
     pub id: Uuid,
     #[serde(rename = "nome")]
-    pub name: PersonName,
+    pub name: String,
     #[serde(rename = "apelido")]
-    pub nick: Nick,
+    pub nick: String,
     #[serde(rename = "nascimento", with = "date_format")]
     pub birth_date: Date,
     pub stack: Option<Vec<String>>,
