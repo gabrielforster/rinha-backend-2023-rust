@@ -52,7 +52,7 @@ async fn main() {
 
 #[derive(Deserialize)]
 struct PersonSearchQuery {
-    #[serde(rename = "t")]
+    #[serde(rename = "t", default)]
     query: String,
 }
 async fn search(
